@@ -4,80 +4,84 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 public class MainPage {
-    // Кнопка "Личный кабинет"
-    private final By personalAccount = By.xpath(".//p[text()='Личный Кабинет']");
-    // Кнопка "Оформить заказ"
-    private final By createOrder = By.xpath(".//button[text()='Оформить заказ']");
-    // Кнопка Вход в форме регистрации
-    private final By enterOnRegistrationForm = By.xpath(".//a[text()='Войти']");
-    // Кнопка войти в аккаунт на главной странице
-    private final By enterButton = By.xpath(".//button[text()='Войти в аккаунт']");
-    // Надпись Соберите бургер на главной странице
-    private final By chooseBurger = By.xpath(".//h1[text()='Соберите бургер']");
-    // Кнопка Булки в конструкторе
-    private final By breadButton = By.xpath(".//div/span[text()='Булки']");
-    // Кнопка Соусы в конструкторе
-    private final By sauceButton = By.xpath(".//div/span[text()='Соусы']");
-    // Кнопка Начинки в конструкторе
-    private final By filingsButton = By.xpath(".//div/span[text()='Начинки']");
-    // Краторная булка
-    private final By creatorBread = By.xpath(".//p[text()='Краторная булка N-200i']");
-    // Соус Традиционный галактический
-    private final By galaxySauce = By.xpath(".//p[text()='Соус традиционный галактический']");
-    // Филе Люминесцентного тетраодонтимформа
-    private final By luminFiling = By.xpath(".//p[text()='Филе Люминесцентного тетраодонтимформа']");
-    private final WebDriver driver;
-    private static final String url = "https://stellarburgers.nomoreparties.site/";
 
+    private WebDriver driver;
+
+    // Локатор для кнопки Войти в аккаунт
+    private By enterAccountButton = By.xpath("//*[@id=\"root\"]/div/main/section[2]/div/button");
+
+    // Локатор для кнопки Личный кабинет
+    private By personalAccountButton = By.xpath("//*[@id=\"root\"]/div/header/nav/a/p");
+
+    // Локатор для надписи Соберите бургер
+    private By setBuggerTitle = By.xpath("//*[@id=\"root\"]/div/main/section[1]/h1");
+
+    // Локаторы для указателя Булки в Конструкторе,
+    private By bunsPointer = By.xpath(".//span[text()='Булки']");
+    private By bunsPointerParent = By.xpath(".//span[text()='Булки']/parent::div");
+
+    // Локаторы для указателя Соусы в Конструкторе
+    private By saucesPointer = By.xpath(".//span[text()='Соусы']");
+    private By saucesPointerParent = By.xpath(".//span[text()='Соусы']/parent::div");
+
+    // Конструктор класса
     public MainPage(WebDriver driver) {
         this.driver = driver;
     }
 
-    public String getUrl() {
-        return url;
+    // Метод перехода на главную страницу тестового стенда
+    public MainPage openMainPage() {
+        driver.get("https://stellarburgers.nomoreparties.site/");
+        return this;
     }
 
-    public void clickPersonalAccount() {
-        driver.findElement(personalAccount).click();
+    // Метод клика по кнопке Личный кабинет
+    public MainPage clickPersonalAccountButton() {
+        driver.findElement(personalAccountButton).click();
+        return this;
     }
 
-    public void clickEnterOnRegistrationForm() {
-        driver.findElement(enterOnRegistrationForm).click();
+    // Метод клика по кнопке Войти в аккаунт
+    public MainPage clickEnterAccountButton() {
+        driver.findElement(enterAccountButton).click();
+        return this;
     }
 
-    public void clickEnterButton() {
-        driver.findElement(enterButton).click();
+    // Метод проверки отображения надписи Соберите бургер
+    public boolean isSetBuggerTitleDisplayed() {
+        return driver.findElement(setBuggerTitle).isDisplayed();
     }
 
-    public String textOfChooseBurger() {
-        return driver.findElement(chooseBurger).getText();
+    // Метод клика по указателю Булки
+    public MainPage clickBunsPointer() {
+        driver.findElement(bunsPointer).click();
+        return this;
     }
 
-    public String buttonCreateOrderText() {
-        return driver.findElement(createOrder).getText();
+    // Метод получения атрибута родителя указателя Булки
+    public String getAttributeBunsPointerParent() {
+        return driver.findElement(bunsPointerParent).getAttribute("class");
     }
 
-    public void clickBreadButton() {
-        driver.findElement(breadButton).click();
+    // Метод клика по указателю Соусы
+    public MainPage clickSaucesPointer() {
+        driver.findElement(saucesPointer).click();
+        return this;
     }
 
-    public void clickSauceButton() {
-        driver.findElement(sauceButton).click();
+    // Метод получения атрибута родителя указателя Соусы
+    public String getAttributeSaucesPointerParent() {
+        return driver.findElement(saucesPointerParent).getAttribute("class");
     }
 
-    public void clickFilingsButton() {
-        driver.findElement(filingsButton).click();
+    // Метод клика по указателю Начинки
+    public MainPage clickFillingsPointer() {
+        driver.findElement(saucesPointer).click();
+        return this;
     }
 
-    public String getTextCratorBread() {
-        return driver.findElement(creatorBread).getText();
-    }
-
-    public String getTextGalaxySauce() {
-        return driver.findElement(galaxySauce).getText();
-    }
-
-    public String getTextLuminFiling() {
-        return driver.findElement(luminFiling).getText();
+    // Метод получения атрибута родителя указателя Начинки
+    public String getAttributeFillingsPointerParent() {
+        return driver.findElement(saucesPointerParent).getAttribute("class");
     }
 }

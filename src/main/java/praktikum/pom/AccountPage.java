@@ -4,31 +4,46 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 public class AccountPage {
-    WebDriver driver;
-    // Логотип страницы
-    private final By logo = By.xpath(".//div[@class = 'AppHeader_header__logo__2D0X2']/a");
-    // Кнопка выход из аккаунта
-    private final By logoutButton = By.xpath(".//button[text()='Выход']");
-    // Кнопка раздела конструктор
-    private final By constructorButton = By.xpath(".//p[text()='Конструктор']");
 
+    private WebDriver driver;
+
+    // Локатор кнопки Профиль
+    private By profileButton = By.xpath("//*[@id=\"root\"]/div/main/div/nav/ul/li[1]/a");
+
+    // Локатор кнопки Конструктор
+    private By constructorButton = By.xpath("//*[@id=\"root\"]/div/header/nav/ul/li[1]/a/p");
+
+    // Локатор логотипа Stellar Burgers
+    private By logoStellarBurgers = By.xpath("//*[@id=\"root\"]/div/header/nav/div");
+
+    // Локатор кнопки Выход
+    private By logoutButton = By.xpath("//*[@id=\"root\"]/div/main/div/nav/ul/li[3]/button");
+
+    // Конструктор класса
     public AccountPage(WebDriver driver) {
         this.driver = driver;
     }
 
-    public void clickLogoutButton() {
-        driver.findElement(logoutButton).click();
+    // Метод проверки отображения указателя Профиль
+    public boolean isProfileButtonDisplayed() {
+        return driver.findElement(profileButton).isDisplayed();
     }
 
-    public void clickLogo() {
-        driver.findElement(logo).click();
-    }
-
-    public void clickConstructorButton() {
+    // Метод клика по кнопке Конструктор
+    public AccountPage clickConstructorButton() {
         driver.findElement(constructorButton).click();
+        return this;
     }
 
-    public String logoutButtonText() {
-        return driver.findElement(logoutButton).getText();
+    // Метод клика по логотипу Stellar Burgers
+    public AccountPage clickLogoStellarBurgers() {
+        driver.findElement(logoStellarBurgers).click();
+        return this;
+    }
+
+    // Метод клика по кнопке Выход
+    public AccountPage clickLogoutButton () {
+        driver.findElement(logoutButton ).click();
+        return this;
     }
 }

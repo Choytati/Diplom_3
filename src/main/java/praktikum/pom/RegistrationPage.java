@@ -4,50 +4,70 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 public class RegistrationPage {
-    // Поле Имя пользователя
-    private final By fieldUserName = By.xpath(".//label[text() = 'Имя']//following-sibling::input");
-    // Поле Email
-    private final By fieldEmail = By.xpath(".//label[text() = 'Email']//following-sibling::input");
-    // Поле Пароль
-    private final By fieldPassword = By.xpath(".//div/input[@name='Пароль']");
-    // Кнопка зарегестрироваться
-    private final By registrationButton = By.xpath(".//button[text()='Зарегистрироваться']");
-    // Кнопка восстановить пароль
-    private final By recoveryPassword = By.xpath(".//a[text()='Восстановить пароль']");
-    private final WebDriver driver;
 
+    private WebDriver driver;
+
+    // Локатор поля Имя
+    private By nameInput = By.xpath("//*[@id=\"root\"]/div/main/div/form/fieldset[1]/div/div/input");
+
+    // Локатор поля Email
+    private By emailInput = By.xpath("//*[@id=\"root\"]/div/main/div/form/fieldset[2]/div/div/input");
+
+    // Локатор поля Пароль
+    private By passwordInput = By.xpath("//*[@id=\"root\"]/div/main/div/form/fieldset[3]/div/div/input");
+
+    // Локатор кнопки Зарегистрироваться
+    private By registrationButton = By.xpath("//*[@id=\"root\"]/div/main/div/form/button");
+
+    // Локатор кнопки Войти
+    private By enterButton = By.xpath("//*[@id=\"root\"]/div/main/div/div/p/a");
+
+    // Локатор надписи Некорректный пароль
+    private By incorrectPasswordTitle = By.xpath("//*[@id=\"root\"]/div/main/div/form/fieldset[3]/div/p");
+
+    // Конструктор класса
     public RegistrationPage(WebDriver driver) {
         this.driver = driver;
     }
 
-    public void valueUserName(String inputName) {
-        driver.findElement(fieldUserName).clear();
-        driver.findElement(fieldUserName).sendKeys(inputName);
-
+    // Метод перехода на страницу регистрации
+    public RegistrationPage openRegistrationPage() {
+        driver.get("https://stellarburgers.nomoreparties.site/register");
+        return this;
     }
 
-    public void valueEmail(String inputEmail) {
-        driver.findElement(fieldEmail).clear();
-        driver.findElement(fieldEmail).sendKeys(inputEmail);
+    // Метод заполнения поля Имя
+    public RegistrationPage setName(String name) {
+        driver.findElement(nameInput).sendKeys(name);
+        return this;
     }
 
-    public void valuePassword(String inputPassword) {
-        driver.findElement(fieldPassword).clear();
-        driver.findElement(fieldPassword).sendKeys(inputPassword);
+    // Метод заполнения поля Email
+    public RegistrationPage setEmail(String email) {
+        driver.findElement(emailInput).sendKeys(email);
+        return this;
     }
 
-    public void clickButtonRegistration() {
+    // Метод заполнения поля Password
+    public RegistrationPage setPassword(String password) {
+        driver.findElement(passwordInput).sendKeys(password);
+        return this;
+    }
+
+    // Метод клика по кнопке Зарегистрироваться
+    public RegistrationPage clickRegistrationButton() {
         driver.findElement(registrationButton).click();
+        return this;
     }
 
-    public void clickRecoveryPassword() {
-        driver.findElement(recoveryPassword).click();
+    // Метод клика по кнопке Войти
+    public RegistrationPage clickEnterButton() {
+        driver.findElement(enterButton).click();
+        return this;
     }
 
-    public void registrationInputFieldsAndClickButton(String inputName, String inputEmail, String inputPassword) {
-        valueUserName(inputName);
-        valueEmail(inputEmail);
-        valuePassword(inputPassword);
-        clickButtonRegistration();
+    // Метод проверки отображения надписи Некорректный пароль
+    public boolean isIncorrectPasswordTitleDisplayed() {
+        return driver.findElement(incorrectPasswordTitle).isDisplayed();
     }
 }

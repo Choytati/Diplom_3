@@ -2,44 +2,56 @@ package praktikum.pom;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import java.util.concurrent.TimeUnit;
 
 public class LoginPage {
-    // Кнопка зарегистрироваться
-    private final By buttonFromStartRegistration = By.className("Auth_link__1fOlj");
-    // Поле Email
-    private final By fieldEmail = By.xpath(".//div/input[@name='name']");
-    // Поле пароль
-    private final By fieldPassword = By.xpath(".//div/input[@name='Пароль']");
-    // Кнопка войти
-    private final By enterButton = By.xpath(".//button[text()='Войти']");
-    private final By messageErrorPassword = By.xpath(".//p[text()='Некорректный пароль']");
-    private final WebDriver driver;
 
+    private WebDriver driver;
+
+    // Локатор поля Email
+    private By emailInput = By.xpath(".//div/input[@name='name']");
+
+    // Локатор поля Пароль
+    private By passwordInput = By.xpath(".//div/input[@name='Пароль']");
+
+    // Локатор кнопки Войти
+    private By enterButton = By.xpath(".//button[text()='Войти']");
+
+    // Локатор надписи Вход
+    private By enterTitle = By.xpath("//*[@id=\"root\"]/div/main/div/h2");
+
+    // Конструктор класса
     public LoginPage(WebDriver driver) {
         this.driver = driver;
     }
 
-    public void clickButtonFromStartRegistration() {
-        driver.findElement(buttonFromStartRegistration).click();
+    // Метод перехода на страницу Входа в личный кабинет
+    public LoginPage openLoginPage() {
+        driver.get("https://stellarburgers.nomoreparties.site/login");
+        return this;
     }
-    public void valueEmail(String inputEmail) {
-        driver.findElement(fieldEmail).sendKeys(inputEmail);
+
+    // Метод заполнения поля Email
+    public LoginPage setEmail(String email) {
+        driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+        driver.findElement(emailInput).sendKeys(email);
+        return this;
     }
-    public void valuePassword(String inputPassword) {
-        driver.findElement(fieldPassword).sendKeys(inputPassword);
+
+    // Метод заполнения поля Password
+    public LoginPage setPassword(String password) {
+        driver.findElement(passwordInput).sendKeys(password);
+        return this;
     }
-    public String buttonEnterText() {
-        return driver.findElement(enterButton).getText();
-    }
-    public String textIncorrectPassword() {
-        return driver.findElement(messageErrorPassword).getText();
-    }
-    public void clickButtonEnter() {
+
+    // Метод клика по кнопке Войти
+    public LoginPage clickEnterButton() {
         driver.findElement(enterButton).click();
+        return this;
     }
-    public void loginEnterFieldsAndClick(String inputEmail, String inputPassword) {
-        valueEmail(inputEmail);
-        valuePassword(inputPassword);
-        clickButtonEnter();
+
+    // Метод проверки отображения надписи вход
+    public boolean isEnterTitleDisplayed() {
+        return driver.findElement(enterTitle).isDisplayed();
     }
 }

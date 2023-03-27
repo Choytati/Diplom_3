@@ -1,46 +1,53 @@
 package praktikum;
 
+import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
-
-import org.junit.After;
-import org.junit.Before;
+import org.junit.Assert;
 import org.junit.Test;
 import praktikum.pom.MainPage;
 
-import static org.junit.Assert.assertEquals;
-
 public class ConstructorTest extends BaseTest {
-    MainPage mainPage = new MainPage(getDriver());
 
-    @Before
-    public void openPage() {
-        openUrl();
+    @Test
+    @DisplayName("Проверка перехода в раздел булочек")
+    @Description("Базовый тест для конструктора на главной странице")
+    public void checkTransitToBuns() {
+
+        String bunsParentAttribute =
+                new MainPage(driver)
+                        .openMainPage()
+                        .clickSaucesPointer()
+                        .clickBunsPointer()
+                        .getAttributeBunsPointerParent();
+        boolean isAttributeContainsCurrent = bunsParentAttribute.contains("current");
+        Assert.assertTrue("Переход к разделу не произошел: ", isAttributeContainsCurrent);
     }
 
     @Test
-    @DisplayName("Проверка перехода на вкладку Бургеры")
-    public void clickOnBread() {
-        mainPage.clickSauceButton();
-        mainPage.clickBreadButton();
-        assertEquals("Краторная булка N-200i", mainPage.getTextCratorBread());
+    @DisplayName("Проверка перехода в раздел соусов")
+    @Description("Базовый тест для конструктора на главной странице")
+    public void checkTransitToSauces() {
+
+        String saucesParentAttribute =
+                new MainPage(driver)
+                        .openMainPage()
+                        .clickSaucesPointer()
+                        .getAttributeSaucesPointerParent();
+        boolean isAttributeContainsCurrent = saucesParentAttribute.contains("current");
+        Assert.assertTrue("Переход к разделу не произошел: ", isAttributeContainsCurrent);
     }
 
     @Test
-    @DisplayName("Проверка перехода на вкладку Соусы")
-    public void clickOnSauce() {
-        mainPage.clickSauceButton();
-        assertEquals("Соус традиционный галактический", mainPage.getTextGalaxySauce());
-    }
+    @DisplayName("Проверка перехода в раздел начинки")
+    @Description("Базовый тест для конструктора на главной странице")
+    public void checkTransitToFillings() {
 
-    @Test
-    @DisplayName("Проверка перехода на вкладку Начинки")
-    public void clickOnFiling() {
-        mainPage.clickFilingsButton();
-        assertEquals("Филе Люминесцентного тетраодонтимформа", mainPage.getTextLuminFiling());
-    }
-
-    @After
-    public void quitDriver() {
-        baseAfter(getDriver());
+        String fillingsParentAttribute =
+                new MainPage(driver)
+                        .openMainPage()
+                        .clickFillingsPointer()
+                        .getAttributeFillingsPointerParent();
+        boolean isAttributeContainsCurrent = fillingsParentAttribute.contains("current");
+        Assert.assertTrue("Переход к разделу не произошел: ", isAttributeContainsCurrent);
     }
 }

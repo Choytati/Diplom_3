@@ -1,61 +1,56 @@
 package praktikum;
 
-import com.github.javafaker.Faker;
-import jdk.jfr.Description;
-
-import org.junit.After;
-import org.junit.Before;
+import io.qameta.allure.Description;
+import io.qameta.allure.junit4.DisplayName;
+import org.junit.Assert;
 import org.junit.Test;
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import praktikum.pom.LoginPage;
-import praktikum.pom.MainPage;
-import praktikum.pom.RegistrationPage;
+import praktikum.pom.*;
 
-import java.time.Duration;
-import static org.junit.Assert.assertEquals;
+public class RegistrationTest extends BaseTest {
 
-public class RegistrationTest {
-    WebDriver driver = new ChromeDriver();
-    MainPage mainPage = new MainPage(driver);
-    RegistrationPage registrationPage = new RegistrationPage(driver);
-    LoginPage loginPage = new LoginPage(driver);
-    Faker faker = new Faker();
-    private final String email = faker.internet().emailAddress();
-    private final String validPassword = faker.internet().password(6,10);
-    private final String invalidPassword = faker.random().toString().substring(0,5);
-    private final String userName = faker.name().firstName();
+    private RegistrationTestData registrationTestData;
 
-    @Before
-    public void setUp() {
-        driver.get(mainPage.getUrl());
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(2));
-        mainPage.clickPersonalAccount();
-        loginPage.clickButtonFromStartRegistration();
+    @Test
+    @DisplayName("Проверка регистрации")
+    @Description("Базовый тест проверки регистрации с валидными данными")
+    public void checkRegistrationWithValidData() {
+
+        registrationTestData = RegistrationTestDataGenerator.getValidData();
+
+        new RegistrationPage(driver)
+                .openRegistrationPage()
+                .setName(registrationTestData.name)
+                .setEmail(registrationTestData.email)
+                .setPassword(registrationTestData.password)
+                .clickRegistrationButton();
+        new LoginPage(driver)
+                .openLoginPage()
+                .setEmail(registrationTestData.email)
+                .setPassword(registrationTestData.password)
+                .clickEnterButton();
+        new MainPage(driver)
+                .clickPersonalAccountButton();
+
+        boolean isProfileButtonDisplayed = new AccountPage(driver).isProfileButtonDisplayed();
+        Assert.assertTrue("Не произошел переход в ЛК: ", isProfileButtonDisplayed);
     }
 
     @Test
-    @Description("Проверка успешной регистрации")
-    public void successfulRegistration() {
-        registrationPage.registrationInputFieldsAndClickButton(userName, email, validPassword);
-        assertEquals("Регистрация не выполнена","Войти",loginPage.buttonEnterText());
+    @DisplayName("Проверка  регистрации")
+    @Description("Негативный тест проверки регистрации с неверным паролем пользователя")
+    public void checkRegistrationWithInvalidShortPassword() {
+        registrationTestData = RegistrationTestDataGenerator.getInvalidDataWithShortPassword();
+
+        boolean isIncorrectPasswordTitleDisplayed =
+                new RegistrationPage(driver)
+                        .openRegistrationPage()
+                        .setName(registrationTestData.name)
+                        .setEmail(registrationTestData.email)
+                        .setPassword(registrationTestData.password)
+                        .clickRegistrationButton()
+                        .isIncorrectPasswordTitleDisplayed();
+
+        Assert.assertTrue("Не отображается надпись Некорректный пароль: ", isIncorrectPasswordTitleDisplayed);
     }
 
-    @Test
-    @Description("Проверка регистрации с невалидным паролем")
-    public void registrationWithInvalidPassword() throws Exception {
-        try {
-            registrationPage.registrationInputFieldsAndClickButton(userName, email, invalidPassword);
-            assertEquals("Регистрация не выполнена","Войти",loginPage.buttonEnterText());
-        }
-        catch (Exception exception) {
-        }
-        assertEquals("Регистрация выполнена","Некорректный пароль",loginPage.textIncorrectPassword());
-    }
-
-    @After
-    public void quitDriver() {
-        driver.quit();
-    }
 }
